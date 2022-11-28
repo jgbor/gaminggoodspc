@@ -1,17 +1,13 @@
 package ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.remember
 import model.DealData
 import network.NetworkManager
 import retrofit2.Call
@@ -30,18 +26,21 @@ class DealsWindow {
     fun show() {
         loadDealData()
         MaterialTheme {
-            Column(Modifier.fillMaxSize(), Arrangement.spacedBy(5.dp)) {
-                Button(modifier = Modifier.align(Alignment.CenterHorizontally),
-                    onClick = {
-                    }) {
-                    Text(if (dealsList.size>0) "${dealsList[0].description}!" else "nincs adat")
-                }
-                Button(modifier = Modifier.align(Alignment.CenterHorizontally),
-                    onClick = {
+            DealItem()
+            DealItem()
+        }
+    }
 
-                    }) {
-                    Text("${dealsList.size}")
-                }
+    @Composable
+    @Preview
+    fun DealItem(){
+        Scaffold {
+            Text(if (dealsList.size>0) "${dealsList[0].description}!" else "nincs adat")
+            var sz = remember{"Button"}
+            Button(onClick = {
+                sz = "Pressed!"
+            }){
+                Text(sz)
             }
         }
     }
