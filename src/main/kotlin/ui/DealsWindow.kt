@@ -1,15 +1,20 @@
 package ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.VerticalScrollbar
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
@@ -38,10 +43,27 @@ class DealsWindow {
     fun show() {
         loadDealData()
         MaterialTheme {
-            LazyColumn {
-                items(dealsList) { deal ->
-                    DealItem(deal)
+            Box(
+                modifier = Modifier.fillMaxSize()
+                    .background(color = Color(180, 180, 180))
+                    .padding(8.dp)
+            ) {
+
+                val state = rememberLazyListState()
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    state = state
+                ) {
+                    items(dealsList) { deal ->
+                        DealItem(deal)
+                    }
                 }
+                VerticalScrollbar(
+                    modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+                    adapter = rememberScrollbarAdapter(
+                        scrollState = state
+                    )
+                )
             }
         }
     }
