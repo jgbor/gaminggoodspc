@@ -1,9 +1,9 @@
 package ui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,75 +15,58 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.loadImageBitmap
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import model.DealData
 import network.NetworkManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.IOException
-import java.net.URL
 
-class DealsWindow {
-    private var platform : String? = null
-    private var type : String? = null
-    private var sortBy : String? = null
+@Composable
+@Preview
+fun DealsWindow(platform: String? = null) {
+    var type: String? = null
+    var sortBy: String? = null
 
-    private var dealsList : MutableList<DealData> = mutableStateListOf()
+    var dealsList: MutableList<DealData> = mutableStateListOf()
+
+    var newWindow by remember { mutableStateOf(false) }
+    var dealData: DealData? by remember { mutableStateOf(null) }
 
     @Composable
     @Preview
-    fun show() {
-        loadDealData()
-        MaterialTheme {
-            Box(
-                modifier = Modifier.fillMaxSize()
-                    .background(color = Color(180, 180, 180))
-                    .padding(8.dp)
-            ) {
-
-                val state = rememberLazyListState()
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    state = state
-                ) {
-                    items(dealsList) { deal ->
-                        DealItem(deal)
-                    }
-                }
-                VerticalScrollbar(
-                    modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
-                    adapter = rememberScrollbarAdapter(
-                        scrollState = state
-                    )
-                )
+    fun DealItem(deal: DealData) {
+        Row(
+            Modifier.clickable {
+                newWindow = true
+                dealData = deal
             }
-        }
-    }
-
-    @Composable
-    @Preview
-    private fun DealItem(dealData: DealData){
-        Row{
+        ) {
             AsyncImage(
-                load = { loadImageBitmap(dealData.thumbnail) },
+                load = { loadImageBitmap(deal.thumbnail) },
                 painterFor = { remember { BitmapPainter(it) } },
-                contentDescription = "Sample",
+                contentDescription = "Thumbnail",
                 modifier = Modifier.width(200.dp)
             )
-            Text(dealData.description)
+            Text(
+                deal.title,
+                Modifier.padding(start = 12.dp),
+                textAlign = TextAlign.Center,
+                //fontSize =
+            )
         }
     }
 
-    private fun loadDealData() {
-        NetworkManager.getDeals(platform,sortBy,type)?.enqueue(object : Callback<Array<DealData?>?> {
+    fun displayDealsData(receivedDealsData: Array<DealData?>?) {
+        for (deal in receivedDealsData!!) {
+            dealsList.add(deal!!)
+        }
+    }
+
+    fun loadDealData() {
+        NetworkManager.getDeals(platform, sortBy, type)?.enqueue(object : Callback<Array<DealData?>?> {
             override fun onResponse(
                 call: Call<Array<DealData?>?>,
                 response: Response<Array<DealData?>?>
@@ -107,43 +90,33 @@ class DealsWindow {
         })
     }
 
-    private fun displayDealsData(receivedDealsData: Array<DealData?>?){
-        for (dealData in receivedDealsData!!) {
-            dealsList.add(dealData!!)
-        }
-    }
+    loadDealData()
+    MaterialTheme {
+        Box(
+            modifier = Modifier.fillMaxSize()
+                .background(color = Color(180, 160, 180))
+                .padding(8.dp)
+        ) {
 
-    @Composable
-    private fun <T> AsyncImage(
-        load: suspend () -> T,
-        painterFor: @Composable (T) -> Painter,
-        contentDescription: String,
-        modifier: Modifier = Modifier,
-        contentScale: ContentScale = ContentScale.Fit,
-    ) {
-        val image: T? by produceState<T?>(null) {
-            value = withContext(Dispatchers.IO) {
-                try {
-                    load()
-                } catch (e: IOException) {
-                    // instead of printing to console, you can also write this to log,
-                    // or show some error placeholder
-                    e.printStackTrace()
-                    null
+            val state = rememberLazyListState()
+            if (newWindow) {
+                DetailsWindow(dealData) { newWindow = false }
+            } else {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    state = state
+                ) {
+                    items(dealsList) { deal ->
+                        DealItem(deal)
+                    }
                 }
+                VerticalScrollbar(
+                    modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+                    adapter = rememberScrollbarAdapter(
+                        scrollState = state
+                    )
+                )
             }
         }
-
-        if (image != null) {
-            Image(
-                painter = painterFor(image!!),
-                contentDescription = contentDescription,
-                contentScale = contentScale,
-                modifier = modifier
-            )
-        }
     }
-
-    private fun loadImageBitmap(url: String): ImageBitmap =
-        URL(url).openStream().buffered().use(::loadImageBitmap)
 }
