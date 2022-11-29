@@ -95,11 +95,11 @@ fun DealsWindow(platform: String? = null, title : String, onBackClick: () -> Uni
         })
     }
 
-    loadDealData()
     MaterialTheme {
         if (newWindow) {
             DetailsWindow(dealData) { newWindow = false }
         } else {
+            loadDealData()
             Column {
                 TopAppBar(
                     title = { Text(title) },

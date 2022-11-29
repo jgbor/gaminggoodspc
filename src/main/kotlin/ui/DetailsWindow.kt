@@ -50,5 +50,10 @@ fun DetailsWindow(deal : DealData?, onBackClick: () -> Unit){
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
+        Text(
+            deal.description,
+            modifier = Modifier.fillMaxWidth()
+                .padding(32.dp)
+        )
     }
 }
