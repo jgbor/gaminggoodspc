@@ -20,6 +20,7 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 
 var backgroundColor = Color(220, 200, 220)
+var mainColor = Color(204,21,14)
 fun main() = application {
     val title = "Gaming Goods"
     val icon = painterResource("ic_launcher_round.png")

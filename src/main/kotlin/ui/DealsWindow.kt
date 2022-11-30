@@ -12,7 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -108,7 +108,9 @@ fun DealsWindow(platform: String? = null, title : String, onBackClick: () -> Uni
             loadDealData()
             Column{
                 TopAppBar(
-                    title = { Text(title) },
+                    title = {
+                        Text(title)
+                     },
                     navigationIcon = {
                         IconButton(onClick = onBackClick) {
                             Icon(
@@ -116,14 +118,17 @@ fun DealsWindow(platform: String? = null, title : String, onBackClick: () -> Uni
                                 contentDescription = null
                             )
                         }
-                        IconButton(onClick = {}, modifier = Modifier.align(Alignment.End)) {
+                    },
+                    modifier = Modifier.width(1000.dp),
+                    backgroundColor = mainColor,
+                    actions = {
+                        IconButton(onClick = {}) {
                             Icon(
-                                imageVector = Icons.Default.Settings,
+                                imageVector = Icons.Default.ArrowDropDown,
                                 contentDescription = null
                             )
                         }
-                    },
-                    modifier = Modifier.width(1000.dp)
+                    }
                 )
                 Box(
                     Modifier.width(1000.dp)

@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
@@ -38,7 +39,8 @@ fun DetailsWindow(deal : DealData?, onBackClick: () -> Unit){
                         contentDescription = null
                     )
                 }
-            }
+            },
+            backgroundColor = mainColor
         )
         Text(
             deal!!.title,
@@ -96,10 +98,12 @@ fun DetailsWindow(deal : DealData?, onBackClick: () -> Unit){
                 Desktop.getDesktop().browse(URI(deal.open_giveaway_url))
             },
             Modifier.align(Alignment.CenterHorizontally)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(mainColor)
         ){
             Text(
-                text = "Get content!"
+                text = "Get content!",
+                color = Color(0,0,0)
             )
         }
     }
