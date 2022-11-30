@@ -133,8 +133,6 @@ fun DealsWindow(platform: String? = null, title : String, onBackClick: () -> Uni
                             scrollState = state
                         )
                     )
-
-
                 }
             }
         }

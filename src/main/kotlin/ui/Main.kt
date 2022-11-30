@@ -43,7 +43,8 @@ fun main() = application {
                     Button(
                         onClick = {
                             toNextPage = true
-                        }
+                        },
+                        Modifier.fillMaxSize()
                     ) {
                         Text(
                             text = "Next"
