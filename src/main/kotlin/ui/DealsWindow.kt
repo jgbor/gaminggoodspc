@@ -8,14 +8,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import model.DealData
 import network.NetworkManager
 import org.jetbrains.skia.impl.Log
@@ -41,23 +45,25 @@ fun DealsWindow(platform: String? = null, title : String, onBackClick: () -> Uni
             Modifier.clickable {
                 newWindow = true
                 dealData = deal
-            }.fillMaxWidth()
+            }.fillMaxWidth(1f)
         ) {
             AsyncImage(
                 load = { loadImageBitmap(deal.thumbnail) },
                 painterFor = { remember { BitmapPainter(it) } },
                 contentDescription = "Thumbnail",
                 modifier = Modifier.width(200.dp)
+                    .clip(RoundedCornerShape(10))
             )
             Column(
                 Modifier.padding(start = 12.dp),
             ) {
                 Text(
                     deal.title,
-                    //fontSize =
+                    fontSize = 24.sp
                 )
                 Text(
-                    deal.platforms
+                    deal.platforms,
+                    fontSize = 12.sp
                 )
             }
         }
@@ -100,7 +106,7 @@ fun DealsWindow(platform: String? = null, title : String, onBackClick: () -> Uni
             DetailsWindow(dealData) { newWindow = false }
         } else {
             loadDealData()
-            Column {
+            Column{
                 TopAppBar(
                     title = { Text(title) },
                     navigationIcon = {
@@ -110,13 +116,20 @@ fun DealsWindow(platform: String? = null, title : String, onBackClick: () -> Uni
                                 contentDescription = null
                             )
                         }
-                    }
+                        IconButton(onClick = {}, modifier = Modifier.align(Alignment.End)) {
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = null
+                            )
+                        }
+                    },
+                    modifier = Modifier.width(1000.dp)
                 )
                 Box(
-                    Modifier.fillMaxSize()
+                    Modifier.width(1000.dp)
+                        .height(600.dp)
                         .padding(8.dp)
                 ) {
-
                     val state = rememberLazyListState()
 
                     LazyColumn(
