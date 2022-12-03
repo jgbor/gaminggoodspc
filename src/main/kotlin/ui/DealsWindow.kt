@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import model.DealData
@@ -37,6 +38,9 @@ fun DealsWindow(platform: String? = null, title : String, onBackClick: () -> Uni
 
     var newWindow by remember { mutableStateOf(false) }
     var dealData: DealData? by remember { mutableStateOf(null) }
+    var showMenu by remember { mutableStateOf(false) }
+    var showTypeMenu by remember { mutableStateOf(false) }
+    var showSortbyMenu by remember { mutableStateOf(false) }
 
     @Composable
     @Preview
@@ -122,11 +126,117 @@ fun DealsWindow(platform: String? = null, title : String, onBackClick: () -> Uni
                     modifier = Modifier.width(1000.dp),
                     backgroundColor = mainColor,
                     actions = {
-                        IconButton(onClick = {}) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowDropDown,
-                                contentDescription = null
-                            )
+                        Box{
+                            IconButton(onClick = { showMenu = !showMenu }) {
+                                Icon(Icons.Default.ArrowDropDown, "")
+                            }
+                            DropdownMenu(
+                                expanded = showMenu,
+                                onDismissRequest = { showMenu = !showMenu },
+                            ) {
+                                DropdownMenu(
+                                    expanded = showSortbyMenu,
+                                    onDismissRequest = { showSortbyMenu = !showSortbyMenu },
+                                    offset = DpOffset((-110).dp, (-150).dp),
+                                ) {
+                                    DropdownMenuItem(
+                                        onClick = {
+                                            sortBy = "value"
+                                            showMenu = false
+                                            showSortbyMenu = false
+                                            loadDealData()
+                                        }
+                                    ) {
+                                        Text(
+                                            text = "Value"
+                                        )
+                                    }
+                                    DropdownMenuItem(
+                                        onClick = {
+                                            sortBy = "date"
+                                            showMenu = false
+                                            showSortbyMenu = false
+                                            loadDealData()
+                                        }
+                                    ) {
+                                        Text(
+                                            text = "Date"
+                                        )
+                                    }
+                                    DropdownMenuItem(
+                                        onClick = {
+                                            sortBy = "popularity"
+                                            showMenu = false
+                                            showSortbyMenu = false
+                                            loadDealData()
+                                        }
+                                    ) {
+                                        Text(
+                                            text = "Popularity"
+                                        )
+                                    }
+                                }
+                                DropdownMenu(
+                                    expanded = showTypeMenu,
+                                    onDismissRequest = { showTypeMenu = !showTypeMenu },
+                                    offset = DpOffset((-110).dp, (-100).dp),
+                                ) {
+                                    DropdownMenuItem(
+                                        onClick = {
+                                            type = "game"
+                                            showMenu = false
+                                            showTypeMenu = false
+                                            loadDealData()
+                                        }
+                                    ) {
+                                        Text(
+                                            text = "Game"
+                                        )
+                                    }
+                                    DropdownMenuItem(
+                                        onClick = {
+                                            type = "loot"
+                                            showMenu = false
+                                            showTypeMenu = false
+                                            loadDealData()
+                                        }
+                                    ) {
+                                        Text(
+                                            text = "Loot"
+                                        )
+                                    }
+                                }
+                                DropdownMenuItem(
+                                    onClick = {
+                                        showSortbyMenu = true
+                                    }
+                                ) {
+                                    Text(
+                                        text = "Sort by"
+                                    )
+                                }
+                                DropdownMenuItem(
+                                    onClick = {
+                                        showTypeMenu = true
+                                    }
+                                ) {
+                                    Text(
+                                        text = "Type"
+                                    )
+                                }
+                                DropdownMenuItem(
+                                    onClick = {
+                                        sortBy = null
+                                        type = null
+                                        showMenu = false
+                                        loadDealData()
+                                    }
+                                ) {
+                                    Text(
+                                        text = "Reset"
+                                    )
+                                }
+                            }
                         }
                     }
                 )

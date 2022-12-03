@@ -60,6 +60,8 @@ fun main() = application {
                         )
                     }
                 }
+                windowState.size = DpSize.Unspecified
+                windowState.position = WindowPosition(Alignment.Center)
             }
         }
     }
