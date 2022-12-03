@@ -41,6 +41,7 @@ fun DealsWindow(platform: String? = null, title : String, onBackClick: () -> Uni
     var showMenu by remember { mutableStateOf(false) }
     var showTypeMenu by remember { mutableStateOf(false) }
     var showSortbyMenu by remember { mutableStateOf(false) }
+    var noData by remember { mutableStateOf(false)}
 
     @Composable
     @Preview
