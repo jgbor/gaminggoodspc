@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import model.DealData
 import network.NetworkManager
-import org.jetbrains.skia.impl.Log
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -41,7 +40,7 @@ fun DealsWindow(platform: String? = null, title : String, onBackClick: () -> Uni
     var showMenu by remember { mutableStateOf(false) }
     var showTypeMenu by remember { mutableStateOf(false) }
     var showSortbyMenu by remember { mutableStateOf(false) }
-    var noData by remember { mutableStateOf(false)}
+    var noData by remember { mutableStateOf(false) }
 
     @Composable
     @Preview
@@ -50,7 +49,7 @@ fun DealsWindow(platform: String? = null, title : String, onBackClick: () -> Uni
             Modifier.clickable {
                 newWindow = true
                 dealData = deal
-            }.fillMaxWidth(1f)
+            }.fillMaxWidth()
         ) {
             AsyncImage(
                 load = { loadImageBitmap(deal.thumbnail) },
@@ -88,12 +87,12 @@ fun DealsWindow(platform: String? = null, title : String, onBackClick: () -> Uni
                 response: Response<Array<DealData?>?>
             ) {
                 if (response.isSuccessful) {
+                    noData = false
                     displayDealsData(response.body())
                 } else {
-                    Log.error("Válasz jött, de valami nem jó!")
+                    noData = true
                 }
             }
-
             override fun onFailure(
                 call: Call<Array<DealData?>?>,
                 throwable: Throwable
@@ -101,7 +100,7 @@ fun DealsWindow(platform: String? = null, title : String, onBackClick: () -> Uni
                 throwable.printStackTrace()
                 type = null
                 sortBy = null
-                Log.error("Hibára futunk")
+                noData = true
             }
         })
     }
@@ -248,20 +247,27 @@ fun DealsWindow(platform: String? = null, title : String, onBackClick: () -> Uni
                 ) {
                     val state = rememberLazyListState()
 
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                        state = state
-                    ) {
-                        items(dealsList) { deal ->
-                            DealItem(deal)
+                    if (noData){
+                      Text(
+                          text = "No deals currently in this category",
+                          fontSize = 32.sp
+                      )
+                    } else {
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                            state = state
+                        ) {
+                            items(dealsList) { deal ->
+                                DealItem(deal)
+                            }
                         }
-                    }
-                    VerticalScrollbar(
-                        modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
-                        adapter = rememberScrollbarAdapter(
-                            scrollState = state
+                        VerticalScrollbar(
+                            modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+                            adapter = rememberScrollbarAdapter(
+                                scrollState = state
+                            )
                         )
-                    )
+                    }
                 }
             }
         }
