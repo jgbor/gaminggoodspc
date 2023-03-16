@@ -6,5 +6,5 @@ pluginManagement {
     }
     
 }
-rootProject.name = "Kotlinhf"
+rootProject.name = "GamingGoods"
 
