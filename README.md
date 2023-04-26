@@ -14,5 +14,5 @@ Egy konkrét ajánlatra nyomva megnyitja a böngészőben az ahhoz tartozó olda
 ## Főbb funkciók
 
 Az alkalmazásban lehetőség van platformok, illetve különböző szempontok(érték) szerint szűrni.
-Egy konkrétajánlatra nyomva menyílik az ahhoz tartozó URL a böngészőnkben.
+Egy konkrét ajánlatra nyomva menyílik az ahhoz tartozó URL a böngészőnkben.
 
